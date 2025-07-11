@@ -1,9 +1,0 @@
-streamlit
-pandas
-matplotlib
-nltk
-tensorflow
-wordcloud
-scikit-learn
-joblib
-gdown
