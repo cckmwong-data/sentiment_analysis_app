@@ -1,13 +1,20 @@
+import os
 import nltk
 
-nltk.download('averaged_perceptron_tagger')
-nltk.download('punkt')
-nltk.download('stopwords')
-nltk.download('wordnet')
+nltk_data_dir = os.path.join(os.getcwd(), "nltk_data")
+if not os.path.exists(nltk_data_dir):
+    os.makedirs(nltk_data_dir)
+
+nltk.data.path.append(nltk_data_dir)
+
+nltk.download('punkt', download_dir=nltk_data_dir)
+nltk.download('averaged_perceptron_tagger', download_dir=nltk_data_dir)
+nltk.download('stopwords', download_dir=nltk_data_dir)
+nltk.download('wordnet', download_dir=nltk_data_dir)
 
 import pandas as pd
 import matplotlib.pyplot as plt
-import nltk
+#import nltk
 from nltk.tokenize import TweetTokenizer
 from nltk import pos_tag
 from nltk.stem import WordNetLemmatizer
@@ -22,7 +29,7 @@ import pickle
 
 import streamlit as st
 import joblib
-import os
+#import os
 import string
 import re
 import streamlit.components.v1 as components
@@ -31,12 +38,7 @@ import html
 from tensorflow.keras.preprocessing.text import tokenizer_from_json
 import json
 
-from googleapiclient.discovery import build
-
-# Ensure NLTK data is stored and accessed from a local folder (for Streamlit Cloud)
-nltk_data_dir = os.path.join(os.path.dirname(__file__), 'nltk_data')
-os.makedirs(nltk_data_dir, exist_ok=True)
-nltk.data.path.append(nltk_data_dir)
+#from googleapiclient.discovery import build
 
 # Download NLTK assets to that folder
 #nltk.download('punkt', download_dir=nltk_data_dir, quiet=True)
