@@ -41,7 +41,7 @@ import gdown
 
 url = "https://drive.google.com/uc?id=1Tj1XFISZBwmTJf3oDW-SEyB7D0XkJICA"
 output = "sentiment_lstm_model.h5"
-gdown.download(url, output, quiet=False)
+gdown.download(url, output, quiet=False, fuzzy=True, use_cookies=True)
 
 # Load max_length
 with open('max_length_sentiment.txt', 'r') as f:
