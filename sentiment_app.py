@@ -48,9 +48,9 @@ with open('max_length_sentiment.txt', 'r') as f:
     max_length = int(f.read())
 
 # Load the tokenizer
-with open('tokenizer_sentiment.json') as f:
-    data = json.load(f)
-tokenizer = tokenizer_from_json(data)
+with open('tokenizer_sentiment.json', 'r') as f:
+    data = f.read()  # Read the file content as a string
+tokenizer = tokenizer_from_json(data)  # Pass the JSON string to the function
 
 def remove_mention_url_email(text):
     # remove mentions, URLs, and emails by replacing these patterns by space
