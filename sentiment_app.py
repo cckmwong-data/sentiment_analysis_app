@@ -1,17 +1,3 @@
-import os
-import nltk
-
-nltk_data_dir = os.path.join(os.getcwd(), "nltk_data")
-if not os.path.exists(nltk_data_dir):
-    os.makedirs(nltk_data_dir)
-
-nltk.data.path.append(nltk_data_dir)
-
-nltk.download('punkt', download_dir=nltk_data_dir)
-nltk.download('averaged_perceptron_tagger', download_dir=nltk_data_dir)
-nltk.download('stopwords', download_dir=nltk_data_dir)
-nltk.download('wordnet', download_dir=nltk_data_dir)
-
 import pandas as pd
 import matplotlib.pyplot as plt
 #import nltk
@@ -39,6 +25,20 @@ from tensorflow.keras.preprocessing.text import tokenizer_from_json
 import json
 
 from googleapiclient.discovery import build
+
+import os
+import nltk
+
+nltk_data_dir = os.path.join(os.getcwd(), "nltk_data")
+if not os.path.exists(nltk_data_dir):
+    os.makedirs(nltk_data_dir)
+
+nltk.data.path.append(nltk_data_dir)
+
+nltk.download('punkt', download_dir=nltk_data_dir)
+nltk.download('averaged_perceptron_tagger', download_dir=nltk_data_dir)
+nltk.download('stopwords', download_dir=nltk_data_dir)
+nltk.download('wordnet', download_dir=nltk_data_dir)
 
 # Download NLTK assets to that folder
 #nltk.download('punkt', download_dir=nltk_data_dir, quiet=True)
