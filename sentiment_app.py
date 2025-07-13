@@ -32,22 +32,19 @@ nltk.download('wordnet', download_dir=nltk_data_dir, quiet=True)
 
 # Load the trained LSTM model
 #model = load_model('sentiment_lstm_model.h5')
-
 import gdown
 
 url = "https://drive.google.com/uc?id=1Tj1XFISZBwmTJf3oDW-SEyB7D0XkJICA"
 output = "sentiment_lstm_model.h5"
 gdown.download(url, output, quiet=False)
 
+# Load the tokenizer
+with open('tokenizer_sentiment.pkl', 'rb') as f:
+    tokenizer = pickle.load(f)
+
 # Load max_length
 with open('max_length_sentiment.txt', 'r') as f:
     max_length = int(f.read())
-
-# Load the tokenizer
-#with open('tokenizer_sentiment.pkl', 'rb') as f:
-    #tokenizer = pickle.load(f)
-
-tokenizer = joblib.load('tokenizer_sentiment.pkl')
 
 def remove_mention_url_email(text):
     # remove mentions, URLs, and emails by replacing these patterns by space
