@@ -6,6 +6,7 @@ from nltk import pos_tag
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords, wordnet
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.text import Tokenizer
 import re
 from wordcloud import WordCloud
 
@@ -20,6 +21,9 @@ import re
 import streamlit.components.v1 as components
 import html
 
+from tensorflow.keras.preprocessing.text import tokenizer_from_json
+import json
+
 # Ensure NLTK data is stored and accessed from a local folder (for Streamlit Cloud)
 nltk_data_dir = os.path.join(os.path.dirname(__file__), 'nltk_data')
 os.makedirs(nltk_data_dir, exist_ok=True)
@@ -32,19 +36,21 @@ nltk.download('wordnet', download_dir=nltk_data_dir, quiet=True)
 
 # Load the trained LSTM model
 #model = load_model('sentiment_lstm_model.h5')
+
 import gdown
 
 url = "https://drive.google.com/uc?id=1Tj1XFISZBwmTJf3oDW-SEyB7D0XkJICA"
 output = "sentiment_lstm_model.h5"
 gdown.download(url, output, quiet=False)
 
-# Load the tokenizer
-with open('tokenizer_sentiment.pkl', 'rb') as f:
-    tokenizer = pickle.load(f)
-
 # Load max_length
 with open('max_length_sentiment.txt', 'r') as f:
     max_length = int(f.read())
+
+# Load the tokenizer
+with open('tokenizer_sentiment.json') as f:
+    data = json.load(f)
+tokenizer = tokenizer_from_json(data)
 
 def remove_mention_url_email(text):
     # remove mentions, URLs, and emails by replacing these patterns by space
