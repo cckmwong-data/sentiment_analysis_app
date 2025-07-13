@@ -1,3 +1,10 @@
+import nltk
+
+nltk.download('averaged_perceptron_tagger')
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import nltk
@@ -33,8 +40,8 @@ nltk.data.path.append(nltk_data_dir)
 
 # Download NLTK assets to that folder
 #nltk.download('punkt', download_dir=nltk_data_dir, quiet=True)
-nltk.download('stopwords', download_dir=nltk_data_dir, quiet=True)
-nltk.download('wordnet', download_dir=nltk_data_dir, quiet=True)
+#nltk.download('stopwords', download_dir=nltk_data_dir, quiet=True)
+#nltk.download('wordnet', download_dir=nltk_data_dir, quiet=True)
 
 # Load the trained LSTM model
 #model = load_model('sentiment_lstm_model.h5')
