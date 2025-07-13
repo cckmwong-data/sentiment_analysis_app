@@ -247,75 +247,74 @@ st.markdown("<label style='font-size: 18px;'>Please copy and paste the YouTube l
 user_input = st.text_area("", key="user_input")
 
 if st.button("🔍Analyze Comments", use_container_width=True):  
-    try:
-        comments = fetch_comments(user_input)
-        
-        df = pd.DataFrame(comments, columns=["comment"])
-        df_comments = pd.DataFrame()
+    comments = fetch_comments(user_input)
+    
+    df = pd.DataFrame(comments, columns=["comment"])
+    df_comments = pd.DataFrame()
 
-        # Initialize progress bar
-        progress_bar = st.progress(0)
-        progress_text = st.empty()  # Placeholder for progress text
+    # Initialize progress bar
+    progress_bar = st.progress(0)
+    progress_text = st.empty()  # Placeholder for progress text
 
-        sentiment = []
-        score = []
-        tokens = []
+    sentiment = []
+    score = []
+    tokens = []
 
-        total_comments = len(df)
+    total_comments = len(df)
 
-        for i, row in df.iterrows():
-            comment = row['comment']
-            s, sc, t = preprocess_and_predict(comment)
-            sentiment.append(s)
-            score.append(sc)
-            tokens.append(t)
+    for i, row in df.iterrows():
+        comment = row['comment']
+        s, sc, t = preprocess_and_predict(comment)
+        sentiment.append(s)
+        score.append(sc)
+        tokens.append(t)
 
-            # Update progress bar
-            progress = (i + 1) / total_comments
-            progress_bar.progress(progress)  # Update progress bar
-            progress_text.text(f"Processing comment {i + 1} of {total_comments}...")
+        # Update progress bar
+        progress = (i + 1) / total_comments
+        progress_bar.progress(progress)  # Update progress bar
+        progress_text.text(f"Processing comment {i + 1} of {total_comments}...")
 
-        # Add to DataFrame
-        df['tokens'] = tokens
-        df['sentiment'] = sentiment
-        df['score'] = score
+    # Add to DataFrame
+    df['tokens'] = tokens
+    df['sentiment'] = sentiment
+    df['score'] = score
 
-        # Store processed data in session state
-        st.session_state["df"] = df
-        st.session_state["df_positive"] = df[df.sentiment == "Positive"]
-        st.session_state["df_negative"] = df[df.sentiment == "Negative"]
+    # Store processed data in session state
+    st.session_state["df"] = df
+    st.session_state["df_positive"] = df[df.sentiment == "Positive"]
+    st.session_state["df_negative"] = df[df.sentiment == "Negative"]
 
-        #df_comments = df[['comment', 'sentiment']]
-        # prepare csv for download
-        st.session_state["csv"] = convert_df(df)
+    #df_comments = df[['comment', 'sentiment']]
+    # prepare csv for download
+    st.session_state["csv"] = convert_df(df)
 
-        # Clear progress bar
-        progress_bar.empty()
-        progress_text.empty()
+    # Clear progress bar
+    progress_bar.empty()
+    progress_text.empty()
 
-        # Display results if data exists in session state
-        if "df" in st.session_state:
-            df = st.session_state["df"]
-            df_positive = st.session_state["df_positive"]
-            df_negative = st.session_state["df_negative"]
+    # Display results if data exists in session state
+    if "df" in st.session_state:
+        df = st.session_state["df"]
+        df_positive = st.session_state["df_positive"]
+        df_negative = st.session_state["df_negative"]
 
-            # CAUTION!!!!! Download Button
-            st.download_button(
-            label="Download All Comments",
-            data=st.session_state["csv"],  # Use cached CSV data
-            file_name="comments.csv",
-            mime="text/csv",
-            key="download-csv"
-            )
+        # CAUTION!!!!! Download Button
+        st.download_button(
+        label="Download All Comments",
+        data=st.session_state["csv"],  # Use cached CSV data
+        file_name="comments.csv",
+        mime="text/csv",
+        key="download-csv"
+        )
 
-            st.write(f"Number of comments downloaded: {len(df)}")
-            st.write(f"Number of positive comments: {len(df_positive)}")
-            st.write(f"Number of negative comments: {len(df_negative)}")
+        st.write(f"Number of comments downloaded: {len(df)}")
+        st.write(f"Number of positive comments: {len(df_positive)}")
+        st.write(f"Number of negative comments: {len(df_negative)}")
 
-            # Dropdown to choose sentiment (optional)
-            #user_sentiment = st.selectbox("Select Sentiment for Word Cloud Generator:", ["Positive", "Negative"], index=0)
+        # Dropdown to choose sentiment (optional)
+        #user_sentiment = st.selectbox("Select Sentiment for Word Cloud Generator:", ["Positive", "Negative"], index=0)
 
-            generate_wordcloud(df_positive, "Positive", "viridis")
-            generate_wordcloud(df_negative, "Negative", "cividis")
-    except Exception as e:
-        st.warning(f"⚠️ Please enter a valid Youtube link.")
+        generate_wordcloud(df_positive, "Positive", "viridis")
+        generate_wordcloud(df_negative, "Negative", "cividis")
+    #except Exception as e:
+        #st.warning(f"⚠️ Please enter a valid Youtube link.")
