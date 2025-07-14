@@ -9,3 +9,5 @@ joblib
 gdown
 keras
 google-api-python-client
+requests
+huggingface_hub
