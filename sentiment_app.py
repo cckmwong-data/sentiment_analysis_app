@@ -48,19 +48,24 @@ nltk.download('wordnet', download_dir=nltk_data_dir)
 MODEL_URL = "https://huggingface.co/cckmwong/sentiment/resolve/main/sentiment_lstm_model.h5"
 MODEL_PATH = "sentiment_lstm_model.h5"
 
-def load_model():
-    # Download the model if not present
+def download_model():
     if not os.path.exists(MODEL_PATH):
-        with st.spinner("Downloading model..."):
-            response = requests.get(MODEL_URL, stream=True)
+        response = requests.get(MODEL_URL, stream=True)
+        # Check for successful response
+        if response.status_code == 200:
             with open(MODEL_PATH, 'wb') as f:
                 for chunk in response.iter_content(chunk_size=8192):
                     f.write(chunk)
-    # Load your model here
-    from tensorflow.keras.models import load_model
+        else:
+            raise Exception(f"Failed to download model! HTTP status code: {response.status_code}")
+
+from tensorflow.keras.models import load_model
+
+def get_model():
+    download_model()
     return load_model(MODEL_PATH)
 
-model = load_model()
+model = get_model()
     
 # Load max_length
 with open('max_length_sentiment.txt', 'r') as f:
