@@ -23,6 +23,7 @@ import html
 
 from tensorflow.keras.preprocessing.text import tokenizer_from_json
 import json
+from tensorflow.keras.models import load_model
 
 #from googleapiclient.discovery import build
 
@@ -48,19 +49,26 @@ nltk.download('wordnet', download_dir=nltk_data_dir)
 MODEL_URL = "https://huggingface.co/cckmwong/sentiment/resolve/main/sentiment_lstm_model.h5"
 MODEL_PATH = "sentiment_lstm_model.h5"
 
+# You can find the real file size on Hugging Face website (it is: 247,160,464 bytes ≈ 247 MB)
+EXPECTED_BYTES = 247160464
+
 def download_model():
-    if not os.path.exists(MODEL_PATH):
+    if not os.path.exists(MODEL_PATH) or os.path.getsize(MODEL_PATH) < EXPECTED_BYTES * 0.95:
+        st.info("Downloading model file...")
         response = requests.get(MODEL_URL, stream=True)
-        # Check for successful response
         if response.status_code == 200:
             with open(MODEL_PATH, 'wb') as f:
                 for chunk in response.iter_content(chunk_size=8192):
-                    f.write(chunk)
+                    if chunk:
+                        f.write(chunk)
         else:
             raise Exception(f"Failed to download model! HTTP status code: {response.status_code}")
+    size = os.path.getsize(MODEL_PATH)
+    st.info(f"Model file size after download: {size} bytes")
+    if size < EXPECTED_BYTES * 0.95:
+        raise Exception(f"Downloaded model file is too small! ({size} bytes)")
 
-from tensorflow.keras.models import load_model
-
+@st.cache_resource
 def get_model():
     download_model()
     return load_model(MODEL_PATH)
