@@ -1,6 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-#import nltk
+import nltk
 from nltk.tokenize import TweetTokenizer
 from nltk import pos_tag
 from nltk.stem import WordNetLemmatizer
@@ -15,7 +15,7 @@ import pickle
 
 import streamlit as st
 import joblib
-#import os
+import os
 import string
 import re
 import streamlit.components.v1 as components
@@ -24,10 +24,7 @@ import html
 from tensorflow.keras.preprocessing.text import tokenizer_from_json
 import json
 
-from googleapiclient.discovery import build
-
-import os
-import nltk
+#from googleapiclient.discovery import build
 
 nltk_data_dir = os.path.join(os.getcwd(), "nltk_data")
 if not os.path.exists(nltk_data_dir):
@@ -48,12 +45,23 @@ nltk.download('wordnet', download_dir=nltk_data_dir)
 # Load the trained LSTM model
 #model = load_model('sentiment_lstm_model.h5')
 
-import gdown
+MODEL_URL = "https://huggingface.co/cckmwong/sentiment/resolve/main/sentiment_lstm_model.h5"
+MODEL_PATH = "sentiment_lstm_model.h5"
 
-url = "https://drive.google.com/uc?id=1Tj1XFISZBwmTJf3oDW-SEyB7D0XkJICA"
-output = "sentiment_lstm_model.h5"
-gdown.download(url, output, quiet=False, fuzzy=True, use_cookies=True)
+def load_model():
+    # Download the model if not present
+    if not os.path.exists(MODEL_PATH):
+        with st.spinner("Downloading model..."):
+            response = requests.get(MODEL_URL, stream=True)
+            with open(MODEL_PATH, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+    # Load your model here
+    from tensorflow.keras.models import load_model
+    return load_model(MODEL_PATH)
 
+model = load_model()
+    
 # Load max_length
 with open('max_length_sentiment.txt', 'r') as f:
     max_length = int(f.read())
